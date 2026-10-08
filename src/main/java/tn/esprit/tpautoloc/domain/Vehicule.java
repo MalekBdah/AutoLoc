@@ -9,6 +9,7 @@ import tn.esprit.tpautoloc.domain.enums.CategorieVehicule;
 import tn.esprit.tpautoloc.domain.enums.StatutVehicule;
 
 import java.math.BigDecimal;
+import java.util.*;
 
 @Entity
 @Table(name = "vehicule")
@@ -33,4 +34,19 @@ public class Vehicule {
 
     @Enumerated(EnumType.STRING)
     private StatutVehicule statut;
+
+    @ManyToOne
+    private Agence agence;
+
+    @OneToMany(mappedBy = "vehicule")
+    private List<Reservation> reservations;
+
+    @OneToMany(mappedBy = "vehicule")
+    private List<Maintenance> maintenances;
+
+    @ManyToMany
+    private List<Equipement> equipements;
+
+
+
 }

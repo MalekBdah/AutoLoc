@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+
 import tn.esprit.tpautoloc.domain.enums.StatutReservation;
 
 @Entity
@@ -26,4 +27,13 @@ public class Reservation {
 
     @Enumerated(EnumType.STRING)
     private StatutReservation statut;
+
+    @ManyToOne
+    private Client client;
+
+    @ManyToOne
+    private Vehicule vehicule;
+
+    @OneToOne
+    private Contrat contrat;
 }
