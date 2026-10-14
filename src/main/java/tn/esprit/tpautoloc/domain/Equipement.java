@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 import java.util.*;
 
 @Entity
@@ -21,7 +22,6 @@ public class Equipement {
 
     private String libelle;
 
-    @ManyToMany(mappedBy = "equipements")
+    @ManyToMany(mappedBy = "equipements", cascade = CascadeType.ALL)
     private List<Vehicule> vehicules;
-
 }

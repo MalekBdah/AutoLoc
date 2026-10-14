@@ -35,16 +35,16 @@ public class Vehicule {
     @Enumerated(EnumType.STRING)
     private StatutVehicule statut;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private Agence agence;
 
-    @OneToMany(mappedBy = "vehicule")
+    @OneToMany(mappedBy = "vehicule", cascade = CascadeType.ALL)
     private List<Reservation> reservations;
 
-    @OneToMany(mappedBy = "vehicule")
+    @OneToMany(mappedBy = "vehicule", cascade = CascadeType.ALL)
     private List<Maintenance> maintenances;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     private List<Equipement> equipements;
 
 

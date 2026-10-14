@@ -5,10 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.util.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+
 import tn.esprit.tpautoloc.domain.enums.ModePaiement;
 
 @Entity
@@ -28,6 +28,7 @@ public class Paiement {
 
     @Enumerated(EnumType.STRING)
     private ModePaiement modePaiement;
-    @ManyToOne
+
+    @ManyToOne(cascade = CascadeType.ALL)
     private Contrat contrat;
 }

@@ -26,10 +26,9 @@ public class Contrat {
     private BigDecimal montantTotal;
     private boolean valide;
 
-    @OneToOne(mappedBy = "contrat")
+    @OneToOne(mappedBy = "contrat", cascade = CascadeType.ALL)
     private Reservation reservation;
 
-    @OneToMany(mappedBy = "contrat")
+    @OneToMany(mappedBy = "contrat", cascade = CascadeType.ALL)
     private List<Paiement> paiements;
-
 }

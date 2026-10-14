@@ -28,12 +28,12 @@ public class Reservation {
     @Enumerated(EnumType.STRING)
     private StatutReservation statut;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private Client client;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private Vehicule vehicule;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Contrat contrat;
 }

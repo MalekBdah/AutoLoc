@@ -24,6 +24,6 @@ public class Maintenance {
     private LocalDate dateFin;
     private String description;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private Vehicule vehicule;
 }
