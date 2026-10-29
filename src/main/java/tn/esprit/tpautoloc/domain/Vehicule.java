@@ -1,5 +1,7 @@
 package tn.esprit.tpautoloc.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +11,8 @@ import tn.esprit.tpautoloc.domain.enums.CategorieVehicule;
 import tn.esprit.tpautoloc.domain.enums.StatutVehicule;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "vehicule")
@@ -35,18 +38,19 @@ public class Vehicule {
     @Enumerated(EnumType.STRING)
     private StatutVehicule statut;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
+    @JsonBackReference("agence-vehicule")
     private Agence agence;
 
     @OneToMany(mappedBy = "vehicule", cascade = CascadeType.ALL)
-    private List<Reservation> reservations;
+    @JsonIgnore
+    private List<Reservation> reservations = new ArrayList<>();
 
     @OneToMany(mappedBy = "vehicule", cascade = CascadeType.ALL)
-    private List<Maintenance> maintenances;
+    @JsonIgnore
+    private List<Maintenance> maintenances = new ArrayList<>();
 
     @ManyToMany(cascade = CascadeType.ALL)
-    private List<Equipement> equipements;
-
-
-
+    @JsonIgnore
+    private List<Equipement> equipements = new ArrayList<>();
 }

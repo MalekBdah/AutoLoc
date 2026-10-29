@@ -5,10 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import tn.esprit.tpautoloc.domain.enums.StatutReservation;
 
 import java.time.LocalDate;
-
-import tn.esprit.tpautoloc.domain.enums.StatutReservation;
 
 @Entity
 @Table(name = "reservation")
@@ -23,15 +22,16 @@ public class Reservation {
     private Long idReservation;
 
     private LocalDate dateDebut;
+
     private LocalDate dateFin;
 
     @Enumerated(EnumType.STRING)
     private StatutReservation statut;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private Client client;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private Vehicule vehicule;
 
     @OneToOne(cascade = CascadeType.ALL)

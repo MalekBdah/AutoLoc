@@ -1,12 +1,14 @@
 package tn.esprit.tpautoloc.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "equipement")
@@ -23,5 +25,6 @@ public class Equipement {
     private String libelle;
 
     @ManyToMany(mappedBy = "equipements", cascade = CascadeType.ALL)
-    private List<Vehicule> vehicules;
+    @JsonIgnore
+    private List<Vehicule> vehicules = new ArrayList<>();
 }

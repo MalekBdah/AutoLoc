@@ -1,5 +1,6 @@
 package tn.esprit.tpautoloc.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,11 +25,13 @@ public class Paiement {
     private Long idPaiement;
 
     private BigDecimal montant;
+
     private LocalDate datePaiement;
 
     @Enumerated(EnumType.STRING)
     private ModePaiement modePaiement;
 
     @ManyToOne(cascade = CascadeType.ALL)
+    @JsonBackReference("contrat-paiements")
     private Contrat contrat;
 }

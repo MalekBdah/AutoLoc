@@ -1,13 +1,15 @@
 package tn.esprit.tpautoloc.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "client")
@@ -29,5 +31,6 @@ public class Client {
     private LocalDate dateInscription;
 
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
-    private List<Reservation> reservations;
+    @JsonIgnore
+    private List<Reservation> reservations = new ArrayList<>();
 }

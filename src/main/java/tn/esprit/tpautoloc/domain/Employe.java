@@ -1,5 +1,6 @@
 package tn.esprit.tpautoloc.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,11 +21,13 @@ public class Employe {
     private Long idEmploye;
 
     private String nom;
+
     private String prenom;
 
     @Enumerated(EnumType.STRING)
     private RoleEmploye role;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
+    @JsonBackReference("agence-employe")
     private Agence agence;
 }
