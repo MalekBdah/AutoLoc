@@ -5,15 +5,18 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import tn.esprit.tpautoloc.domain.Reservation;
+import tn.esprit.tpautoloc.domain.enums.StatutReservation;
 import tn.esprit.tpautoloc.exception.ResourceNotFoundException;
 import tn.esprit.tpautoloc.repository.IReservationRepository;
 import tn.esprit.tpautoloc.service.IReservationService;
+import tn.esprit.tpautoloc.service.observer.ReservationSubject;
 
 @Service
 @RequiredArgsConstructor
 public class ReservationServiceImpl implements IReservationService {
 
     private final IReservationRepository reservationRepository;
+    private final ReservationSubject reservationSubject;
 
     @Override
     public Reservation create(Reservation reservation) {
@@ -26,7 +29,11 @@ public class ReservationServiceImpl implements IReservationService {
 
         verifierDates(reservation);
 
-        return reservationRepository.save(reservation);
+        Reservation sauvegardee = reservationRepository.save(reservation);
+
+        reservationSubject.notifierConfirmation(sauvegardee);
+
+        return sauvegardee;
     }
 
     @Override
@@ -66,6 +73,20 @@ public class ReservationServiceImpl implements IReservationService {
         }
 
         reservationRepository.deleteById(id);
+    }
+
+    @Override
+    public Reservation annulerReservation(Long id) {
+
+        Reservation reservation = findById(id);
+
+        reservation.setStatut(StatutReservation.ANNULEE);
+
+        Reservation sauvegardee = reservationRepository.save(reservation);
+
+        reservationSubject.notifierAnnulation(sauvegardee);
+
+        return sauvegardee;
     }
 
     private void verifierDates(Reservation reservation) {
