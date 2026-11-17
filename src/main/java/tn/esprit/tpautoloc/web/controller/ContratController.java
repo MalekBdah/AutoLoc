@@ -1,11 +1,13 @@
 package tn.esprit.tpautoloc.web.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import tn.esprit.tpautoloc.domain.Contrat;
 import tn.esprit.tpautoloc.service.IContratService;
+import tn.esprit.tpautoloc.web.dto.ContratDTO;
 
 import java.util.List;
 
@@ -16,38 +18,47 @@ public class ContratController {
 
     private final IContratService contratService;
 
-    // GET : Afficher tous les contrats
     @GetMapping
-    public List<Contrat> findAll() {
-        return contratService.findAll();
+    public ResponseEntity<List<ContratDTO>> findAll() {
+        return ResponseEntity.ok(
+                contratService.findAll()
+        );
     }
 
-    // GET : Afficher un contrat par ID
     @GetMapping("/{id}")
-    public Contrat findById(@PathVariable Long id) {
-        return contratService.findById(id);
+    public ResponseEntity<ContratDTO> findById(
+            @PathVariable Long id) {
+
+        return ResponseEntity.ok(
+                contratService.findById(id)
+        );
     }
 
-    // POST : Ajouter un contrat
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public Contrat create(@RequestBody Contrat contrat) {
-        return contratService.create(contrat);
+    public ResponseEntity<ContratDTO> create(
+            @Valid @RequestBody ContratDTO dto) {
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(contratService.create(dto));
     }
 
-    // PUT : Modifier un contrat
     @PutMapping("/{id}")
-    public Contrat update(
+    public ResponseEntity<ContratDTO> update(
             @PathVariable Long id,
-            @RequestBody Contrat contrat) {
+            @Valid @RequestBody ContratDTO dto) {
 
-        return contratService.update(id, contrat);
+        return ResponseEntity.ok(
+                contratService.update(id, dto)
+        );
     }
 
-    // DELETE : Supprimer un contrat
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteById(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteById(
+            @PathVariable Long id) {
+
         contratService.deleteById(id);
+
+        return ResponseEntity.noContent().build();
     }
 }

@@ -4,8 +4,12 @@ import java.util.List;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import tn.esprit.tpautoloc.domain.Agence;
 import tn.esprit.tpautoloc.domain.Employe;
 import tn.esprit.tpautoloc.exception.ResourceNotFoundException;
+import tn.esprit.tpautoloc.repository.IAgenceRepository;
 import tn.esprit.tpautoloc.repository.IEmployeRepository;
 import tn.esprit.tpautoloc.service.IEmployeService;
 
@@ -14,6 +18,7 @@ import tn.esprit.tpautoloc.service.IEmployeService;
 public class EmployeServiceImpl implements IEmployeService {
 
     private final IEmployeRepository employeRepository;
+    private final IAgenceRepository agenceRepository;
 
     @Override
     public Employe create(Employe employe) {
@@ -72,5 +77,41 @@ public class EmployeServiceImpl implements IEmployeService {
         }
 
         employeRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public void affecterEmployeAAgence(Long employeId, Long agenceId) {
+
+        Employe employe = employeRepository.findById(employeId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Employe", employeId));
+
+        Agence agence = agenceRepository.findById(agenceId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Agence", agenceId));
+
+        employe.setAgence(agence);
+
+        employeRepository.save(employe);
+    }
+
+    @Override
+    @Transactional
+    public void desaffecterEmployeDeAgence(Long employeId) {
+
+        Employe employe = employeRepository.findById(employeId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Employe", employeId));
+
+        if (employe.getAgence() == null) {
+            throw new IllegalArgumentException(
+                    "L'employé n'est affecté à aucune agence"
+            );
+        }
+
+        employe.setAgence(null);
+
+        employeRepository.save(employe);
     }
 }

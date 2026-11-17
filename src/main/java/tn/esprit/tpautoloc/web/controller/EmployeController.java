@@ -45,4 +45,26 @@ public class EmployeController {
     public void deleteById(@PathVariable Long id) {
         employeService.deleteById(id);
     }
+
+    @PutMapping("/{employeId}/agence/{agenceId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void affecterEmployeAAgence(
+            @PathVariable Long employeId,
+            @PathVariable Long agenceId) {
+
+        employeService.affecterEmployeAAgence(
+                employeId,
+                agenceId
+        );
+    }
+
+    @PutMapping("/{employeId}/desaffecter-agence")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void desaffecterEmployeDeAgence(
+            @PathVariable Long employeId) {
+
+        employeService.desaffecterEmployeDeAgence(
+                employeId
+        );
+    }
 }

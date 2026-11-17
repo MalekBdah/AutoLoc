@@ -4,21 +4,22 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import tn.esprit.tpautoloc.domain.Agence;
-import tn.esprit.tpautoloc.domain.Client;
-import tn.esprit.tpautoloc.domain.Vehicule;
-
-import tn.esprit.tpautoloc.repository.IAgenceRepository;
-import tn.esprit.tpautoloc.repository.IClientRepository;
 import tn.esprit.tpautoloc.domain.enums.CategorieVehicule;
 import tn.esprit.tpautoloc.domain.enums.StatutVehicule;
 
+import tn.esprit.tpautoloc.exception.ResourceNotFoundException;
+
+import tn.esprit.tpautoloc.repository.IAgenceRepository;
+import tn.esprit.tpautoloc.repository.IClientRepository;
 
 import tn.esprit.tpautoloc.service.IAgenceService;
 import tn.esprit.tpautoloc.service.IClientService;
 import tn.esprit.tpautoloc.service.IVehiculeService;
 
-import tn.esprit.tpautoloc.exception.ResourceNotFoundException;
+import tn.esprit.tpautoloc.web.dto.AgenceDTO;
+import tn.esprit.tpautoloc.web.dto.ClientDTO;
+import tn.esprit.tpautoloc.web.dto.VehiculeDTO;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -33,14 +34,6 @@ class TpAutolocApplicationTests {
     @Autowired
     private IClientRepository clientRepository;
 
-    @Test
-    void contextLoads() {
-        assertNotNull(agenceRepository);
-        assertNotNull(clientRepository);
-    }
-
-
-
     @Autowired
     private IAgenceService agenceService;
 
@@ -51,24 +44,35 @@ class TpAutolocApplicationTests {
     private IVehiculeService vehiculeService;
 
     @Test
+    void contextLoads() {
+
+        assertNotNull(agenceRepository);
+        assertNotNull(clientRepository);
+        assertNotNull(agenceService);
+        assertNotNull(clientService);
+        assertNotNull(vehiculeService);
+    }
+
+    @Test
     void testAgenceService() {
 
         // 1. Création
-        Agence agence = new Agence();
+        AgenceDTO agence = new AgenceDTO();
+
         agence.setNom("Agence Ariana");
         agence.setVille("Ariana");
         agence.setAdresse("Centre Ariana");
         agence.setTelephone("70111222");
 
         // 2. Enregistrement
-        Agence saved = agenceService.create(agence);
+        AgenceDTO saved = agenceService.create(agence);
 
         System.out.println("Agence enregistrée : " + saved);
 
         assertNotNull(saved);
-        assertNotNull(saved.getIdAgence());
+        assertNotNull(saved.getId());
 
-        Long id = saved.getIdAgence();
+        Long id = saved.getId();
 
         // 3. findAll()
         System.out.println("Liste des agences :");
@@ -79,7 +83,7 @@ class TpAutolocApplicationTests {
         assertFalse(agenceService.findAll().isEmpty());
 
         // 4. findById()
-        Agence found = agenceService.findById(id);
+        AgenceDTO found = agenceService.findById(id);
 
         System.out.println("Agence trouvée : " + found);
 
@@ -89,22 +93,32 @@ class TpAutolocApplicationTests {
         // 5. Nombre d'agences
         int nombreAgences = agenceService.findAll().size();
 
-        System.out.println("Nombre d'agences : " + nombreAgences);
+        System.out.println(
+                "Nombre d'agences : " + nombreAgences
+        );
 
         assertTrue(nombreAgences >= 1);
 
         // 6. Modification
-        Agence modification = new Agence();
+        AgenceDTO modification = new AgenceDTO();
+
         modification.setNom("Agence Ariana Centre");
         modification.setVille("Ariana");
         modification.setAdresse("Centre Ariana");
         modification.setTelephone("70111222");
 
-        Agence updated = agenceService.update(id, modification);
+        AgenceDTO updated =
+                agenceService.update(id, modification);
 
-        System.out.println("Agence modifiée : " + updated);
+        System.out.println(
+                "Agence modifiée : " + updated
+        );
 
-        assertEquals("Agence Ariana Centre", updated.getNom());
+        assertEquals(
+                "Agence Ariana Centre",
+                updated.getNom()
+        );
+
         // 7. Suppression
         agenceService.deleteById(id);
 
@@ -114,16 +128,17 @@ class TpAutolocApplicationTests {
                 () -> agenceService.findById(id)
         );
 
-        System.out.println("Agence supprimée avec succès");
-
-
+        System.out.println(
+                "Agence supprimée avec succès"
+        );
     }
 
     @Test
     void testClientService() {
 
         // 1. Premier client
-        Client client1 = new Client();
+        ClientDTO client1 = new ClientDTO();
+
         client1.setNom("Ben Salah");
         client1.setPrenom("Ghaith");
         client1.setEmail("ghaith@gmail.com");
@@ -132,7 +147,8 @@ class TpAutolocApplicationTests {
         client1.setDateInscription(LocalDate.now());
 
         // 2. Deuxième client
-        Client client2 = new Client();
+        ClientDTO client2 = new ClientDTO();
+
         client2.setNom("Trabelsi");
         client2.setPrenom("Ahmed");
         client2.setEmail("ahmed@gmail.com");
@@ -141,17 +157,25 @@ class TpAutolocApplicationTests {
         client2.setDateInscription(LocalDate.now());
 
         // 3. Enregistrement
-        Client saved1 = clientService.create(client1);
-        Client saved2 = clientService.create(client2);
+        ClientDTO saved1 =
+                clientService.create(client1);
 
-        System.out.println("Client 1 enregistré : " + saved1);
-        System.out.println("Client 2 enregistré : " + saved2);
+        ClientDTO saved2 =
+                clientService.create(client2);
 
-        assertNotNull(saved1.getIdClient());
-        assertNotNull(saved2.getIdClient());
+        System.out.println(
+                "Client 1 enregistré : " + saved1
+        );
 
-        Long id1 = saved1.getIdClient();
-        Long id2 = saved2.getIdClient();
+        System.out.println(
+                "Client 2 enregistré : " + saved2
+        );
+
+        assertNotNull(saved1.getId());
+        assertNotNull(saved2.getId());
+
+        Long id1 = saved1.getId();
+        Long id2 = saved2.getId();
 
         // 4. findAll()
         System.out.println("Liste des clients :");
@@ -159,40 +183,65 @@ class TpAutolocApplicationTests {
         clientService.findAll()
                 .forEach(System.out::println);
 
-        assertFalse(clientService.findAll().isEmpty());
+        assertFalse(
+                clientService.findAll().isEmpty()
+        );
 
         // 5. findById()
-        Client found = clientService.findById(id1);
+        ClientDTO found =
+                clientService.findById(id1);
 
-        System.out.println("Client trouvé : " + found);
+        System.out.println(
+                "Client trouvé : " + found
+        );
 
         assertNotNull(found);
-        assertEquals("Ben Salah", found.getNom());
+
+        assertEquals(
+                "Ben Salah",
+                found.getNom()
+        );
 
         // 6. Nombre de clients
-        int nombreClients = clientService.findAll().size();
+        int nombreClients =
+                clientService.findAll().size();
 
-        System.out.println("Nombre de clients : " + nombreClients);
+        System.out.println(
+                "Nombre de clients : " + nombreClients
+        );
 
         assertTrue(nombreClients >= 2);
 
         // 7. Modification
-        Client modification = new Client();
+        ClientDTO modification =
+                new ClientDTO();
+
         modification.setNom("Ben Salah");
         modification.setPrenom("Ghaith");
-        modification.setEmail("ghaith.new@gmail.com");
+        modification.setEmail(
+                "ghaith.new@gmail.com"
+        );
         modification.setTelephone("22111222");
         modification.setNumPermis("PERMIS001");
-        modification.setDateInscription(saved1.getDateInscription());
+        modification.setDateInscription(
+                saved1.getDateInscription()
+        );
 
-        Client updated = clientService.update(id1, modification);
+        ClientDTO updated =
+                clientService.update(
+                        id1,
+                        modification
+                );
 
-        System.out.println("Client modifié : " + updated);
+        System.out.println(
+                "Client modifié : " + updated
+        );
 
         assertEquals(
                 "ghaith.new@gmail.com",
                 updated.getEmail()
         );
+
         // 8. Suppression
         clientService.deleteById(id1);
         clientService.deleteById(id2);
@@ -208,95 +257,178 @@ class TpAutolocApplicationTests {
                 () -> clientService.findById(id2)
         );
 
-        System.out.println("Clients supprimés avec succès");
+        System.out.println(
+                "Clients supprimés avec succès"
+        );
     }
+
     @Test
     void testVehiculeService() {
 
-        // 1. Création
-        Vehicule vehicule = new Vehicule();
+        /*
+         * Le VehiculeDTO utilise maintenant agenceId.
+         * On crée donc d'abord une agence.
+         */
 
-        vehicule.setImmatriculation("123-TUN-456");
+        AgenceDTO agence = new AgenceDTO();
+
+        agence.setNom("Agence Test Vehicule");
+        agence.setVille("Tunis");
+        agence.setAdresse("Centre Tunis");
+        agence.setTelephone("71111222");
+
+        AgenceDTO agenceSaved =
+                agenceService.create(agence);
+
+        assertNotNull(agenceSaved.getId());
+
+        Long agenceId = agenceSaved.getId();
+
+        // 1. Création véhicule
+        VehiculeDTO vehicule =
+                new VehiculeDTO();
+
+        vehicule.setImmatriculation(
+                "123-TUN-456"
+        );
+
         vehicule.setMarque("Peugeot");
         vehicule.setModele("208");
-        vehicule.setCategorie(CategorieVehicule.CITADINE);
-        vehicule.setTarifJournalier(new BigDecimal("120.00"));
-        vehicule.setStatut(StatutVehicule.DISPONIBLE);
+
+        vehicule.setCategorie(
+                CategorieVehicule.CITADINE
+        );
+
+        vehicule.setTarifJournalier(
+                new BigDecimal("120.00")
+        );
+
+        vehicule.setStatut(
+                StatutVehicule.DISPONIBLE
+        );
+
+        vehicule.setAgenceId(agenceId);
 
         // 2. Enregistrement
-        Vehicule saved = vehiculeService.create(vehicule);
+        VehiculeDTO saved =
+                vehiculeService.create(vehicule);
 
-        System.out.println("Véhicule enregistré : " + saved);
+        System.out.println(
+                "Véhicule enregistré : " + saved
+        );
 
         assertNotNull(saved);
-        assertNotNull(saved.getIdVehicule());
+        assertNotNull(saved.getId());
 
-        Long id = saved.getIdVehicule();
+        assertEquals(
+                agenceId,
+                saved.getAgenceId()
+        );
+
+        Long id = saved.getId();
 
         // 3. findAll()
-        System.out.println("Liste des véhicules :");
+        System.out.println(
+                "Liste des véhicules :"
+        );
 
         vehiculeService.findAll()
                 .forEach(System.out::println);
 
-        assertFalse(vehiculeService.findAll().isEmpty());
+        assertFalse(
+                vehiculeService.findAll().isEmpty()
+        );
 
         // 4. findById()
-        Vehicule found = vehiculeService.findById(id);
-
-        System.out.println("Véhicule trouvé : " + found);
-
-        assertNotNull(found);
-        assertEquals("Peugeot", found.getMarque());
-        assertEquals("208", found.getModele());
-
-        // 5. Nombre de véhicules
-        int nombreVehicules = vehiculeService.findAll().size();
+        VehiculeDTO found =
+                vehiculeService.findById(id);
 
         System.out.println(
-                "Nombre de véhicules : " + nombreVehicules
+                "Véhicule trouvé : " + found
+        );
+
+        assertNotNull(found);
+
+        assertEquals(
+                "Peugeot",
+                found.getMarque()
+        );
+
+        assertEquals(
+                "208",
+                found.getModele()
+        );
+
+        // 5. Nombre de véhicules
+        int nombreVehicules =
+                vehiculeService.findAll().size();
+
+        System.out.println(
+                "Nombre de véhicules : "
+                        + nombreVehicules
         );
 
         assertTrue(nombreVehicules >= 1);
 
         // 6. Modification
-        Vehicule modification = new Vehicule();
+        VehiculeDTO modification =
+                new VehiculeDTO();
 
-        modification.setImmatriculation("123-TUN-456");
+        modification.setImmatriculation(
+                "123-TUN-456"
+        );
+
         modification.setMarque("Peugeot");
         modification.setModele("308");
-        modification.setCategorie(CategorieVehicule.BERLINE);
+
+        modification.setCategorie(
+                CategorieVehicule.BERLINE
+        );
+
         modification.setTarifJournalier(
                 new BigDecimal("150.00")
         );
-        modification.setStatut(StatutVehicule.DISPONIBLE);
 
-        Vehicule updated =
-                vehiculeService.update(id, modification);
+        modification.setStatut(
+                StatutVehicule.DISPONIBLE
+        );
+
+        modification.setAgenceId(agenceId);
+
+        VehiculeDTO updated =
+                vehiculeService.update(
+                        id,
+                        modification
+                );
 
         System.out.println(
                 "Véhicule modifié : " + updated
         );
 
-        assertEquals("308", updated.getModele());
+        assertEquals(
+                "308",
+                updated.getModele()
+        );
 
         assertEquals(
                 new BigDecimal("150.00"),
                 updated.getTarifJournalier()
         );
-        // 7. Suppression
+
+        // 7. Suppression véhicule
         vehiculeService.deleteById(id);
 
-        // 8. Vérification
+        // 8. Vérification véhicule
         assertThrows(
                 ResourceNotFoundException.class,
                 () -> vehiculeService.findById(id)
         );
 
+        // 9. Nettoyage agence de test
+        agenceService.deleteById(agenceId);
+
         System.out.println(
                 "Véhicule supprimé avec succès"
         );
     }
-    }
-
-
+}

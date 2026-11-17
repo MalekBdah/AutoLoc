@@ -1,17 +1,17 @@
 package tn.esprit.tpautoloc.service;
 
 import java.util.List;
-import tn.esprit.tpautoloc.domain.Agence;
+import tn.esprit.tpautoloc.web.dto.AgenceDTO;
 
 public interface IAgenceService {
 
-    Agence create(Agence agence);
+    AgenceDTO create(AgenceDTO dto);
 
-    Agence findById(Long id);
+    AgenceDTO findById(Long id);
 
-    List<Agence> findAll();
+    List<AgenceDTO> findAll();
 
-    Agence update(Long id, Agence agence);
+    AgenceDTO update(Long id, AgenceDTO dto);
 
     void deleteById(Long id);
 }

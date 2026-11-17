@@ -1,11 +1,13 @@
 package tn.esprit.tpautoloc.web.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import tn.esprit.tpautoloc.domain.Vehicule;
 import tn.esprit.tpautoloc.service.IVehiculeService;
+import tn.esprit.tpautoloc.web.dto.VehiculeDTO;
 
 import java.util.List;
 
@@ -17,32 +19,79 @@ public class VehiculeController {
     private final IVehiculeService vehiculeService;
 
     @GetMapping
-    public List<Vehicule> findAll() {
-        return vehiculeService.findAll();
+    public ResponseEntity<List<VehiculeDTO>> findAll() {
+
+        return ResponseEntity.ok(
+                vehiculeService.findAll()
+        );
     }
 
     @GetMapping("/{id}")
-    public Vehicule findById(@PathVariable Long id) {
-        return vehiculeService.findById(id);
+    public ResponseEntity<VehiculeDTO> findById(
+            @PathVariable Long id) {
+
+        return ResponseEntity.ok(
+                vehiculeService.findById(id)
+        );
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public Vehicule create(@RequestBody Vehicule vehicule) {
-        return vehiculeService.create(vehicule);
+    public ResponseEntity<VehiculeDTO> create(
+            @Valid @RequestBody VehiculeDTO dto) {
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(
+                        vehiculeService.create(dto)
+                );
     }
 
     @PutMapping("/{id}")
-    public Vehicule update(
+    public ResponseEntity<VehiculeDTO> update(
             @PathVariable Long id,
-            @RequestBody Vehicule vehicule) {
+            @Valid @RequestBody VehiculeDTO dto) {
 
-        return vehiculeService.update(id, vehicule);
+        return ResponseEntity.ok(
+                vehiculeService.update(id, dto)
+        );
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteById(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteById(
+            @PathVariable Long id) {
+
         vehiculeService.deleteById(id);
+
+        return ResponseEntity
+                .noContent()
+                .build();
+    }
+
+    @PutMapping("/{vehiculeId}/agence/{agenceId}")
+    public ResponseEntity<Void> affecterVehiculeAAgence(
+            @PathVariable Long vehiculeId,
+            @PathVariable Long agenceId) {
+
+        vehiculeService.affecterVehiculeAAgence(
+                vehiculeId,
+                agenceId
+        );
+
+        return ResponseEntity
+                .noContent()
+                .build();
+    }
+
+    @PutMapping("/{vehiculeId}/desaffecter-agence")
+    public ResponseEntity<Void> desaffecterVehiculeDeAgence(
+            @PathVariable Long vehiculeId) {
+
+        vehiculeService.desaffecterVehiculeDeAgence(
+                vehiculeId
+        );
+
+        return ResponseEntity
+                .noContent()
+                .build();
     }
 }

@@ -2,10 +2,11 @@ package tn.esprit.tpautoloc.web.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import tn.esprit.tpautoloc.domain.Agence;
 import tn.esprit.tpautoloc.service.IAgenceService;
+import tn.esprit.tpautoloc.web.dto.AgenceDTO;
 
 import java.util.List;
 
@@ -17,32 +18,46 @@ public class AgenceController {
     private final IAgenceService agenceService;
 
     @GetMapping
-    public List<Agence> findAll() {
-        return agenceService.findAll();
+    public ResponseEntity<List<AgenceDTO>> findAll() {
+        return ResponseEntity.ok(
+                agenceService.findAll()
+        );
     }
 
     @GetMapping("/{id}")
-    public Agence findById(@PathVariable Long id) {
-        return agenceService.findById(id);
+    public ResponseEntity<AgenceDTO> findById(
+            @PathVariable Long id) {
+
+        return ResponseEntity.ok(
+                agenceService.findById(id)
+        );
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public Agence create(@RequestBody Agence agence) {
-        return agenceService.create(agence);
+    public ResponseEntity<AgenceDTO> create(
+            @RequestBody AgenceDTO dto) {
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(agenceService.create(dto));
     }
 
     @PutMapping("/{id}")
-    public Agence update(
+    public ResponseEntity<AgenceDTO> update(
             @PathVariable Long id,
-            @RequestBody Agence agence) {
+            @RequestBody AgenceDTO dto) {
 
-        return agenceService.update(id, agence);
+        return ResponseEntity.ok(
+                agenceService.update(id, dto)
+        );
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteById(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteById(
+            @PathVariable Long id) {
+
         agenceService.deleteById(id);
+
+        return ResponseEntity.noContent().build();
     }
 }

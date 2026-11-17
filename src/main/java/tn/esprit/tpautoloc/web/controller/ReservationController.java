@@ -1,11 +1,12 @@
 package tn.esprit.tpautoloc.web.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import tn.esprit.tpautoloc.domain.Reservation;
 import tn.esprit.tpautoloc.service.IReservationService;
+import tn.esprit.tpautoloc.web.dto.ReservationRequestDTO;
+import tn.esprit.tpautoloc.web.dto.ReservationResponseDTO;
 
 import java.util.List;
 
@@ -17,32 +18,47 @@ public class ReservationController {
     private final IReservationService reservationService;
 
     @GetMapping
-    public List<Reservation> findAll() {
-        return reservationService.findAll();
+    public ResponseEntity<List<ReservationResponseDTO>> findAll() {
+
+        return ResponseEntity.ok(
+                reservationService.findAll()
+        );
     }
 
     @GetMapping("/{id}")
-    public Reservation findById(@PathVariable Long id) {
-        return reservationService.findById(id);
-    }
+    public ResponseEntity<ReservationResponseDTO> findById(
+            @PathVariable Long id) {
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public Reservation create(@RequestBody Reservation reservation) {
-        return reservationService.create(reservation);
+        return ResponseEntity.ok(
+                reservationService.findById(id)
+        );
     }
 
     @PutMapping("/{id}")
-    public Reservation update(
+    public ResponseEntity<ReservationResponseDTO> update(
             @PathVariable Long id,
-            @RequestBody Reservation reservation) {
+            @RequestBody ReservationRequestDTO dto) {
 
-        return reservationService.update(id, reservation);
+        return ResponseEntity.ok(
+                reservationService.update(id, dto)
+        );
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteById(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteById(
+            @PathVariable Long id) {
+
         reservationService.deleteById(id);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}/annuler")
+    public ResponseEntity<ReservationResponseDTO> annuler(
+            @PathVariable Long id) {
+
+        return ResponseEntity.ok(
+                reservationService.annulerReservation(id)
+        );
     }
 }
